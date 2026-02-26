@@ -103,10 +103,45 @@
 </head>
 <body class="flex flex-col md:flex-row h-screen w-full">
 
+    <div id="landing-overlay" class="fixed inset-0 z-50 bg-beige flex flex-col md:flex-row flex-wrap transition-opacity duration-1000">
+        <div class="w-full md:w-1/2 h-1/4 md:h-1/2 border-b md:border-b md:border-r border-inkFaint flex items-center justify-center hover:bg-white/40 transition-colors cursor-pointer group" onclick="app.enterSite('focus')">
+            <div class="text-center transform group-hover:-translate-y-1 transition-transform duration-500">
+                <span class="font-mono text-[0.65rem] tracking-widest text-inkMuted block mb-4">01</span>
+                <span class="font-serif text-lg md:text-xl tracking-widest text-ink">探求の現在地</span>
+                <span class="font-mono text-[0.65rem] text-inkMuted block mt-4 uppercase">Focus</span>
+            </div>
+        </div>
+        <div class="w-full md:w-1/2 h-1/4 md:h-1/2 border-b border-inkFaint flex items-center justify-center hover:bg-white/40 transition-colors cursor-pointer group" onclick="app.enterSite('lab')">
+            <div class="text-center transform group-hover:-translate-y-1 transition-transform duration-500">
+                <span class="font-mono text-[0.65rem] tracking-widest text-inkMuted block mb-4">02</span>
+                <span class="font-serif text-lg md:text-xl tracking-widest text-ink">論理と記述</span>
+                <span class="font-mono text-[0.65rem] text-inkMuted block mt-4 uppercase">Lab</span>
+            </div>
+        </div>
+        <div class="w-full md:w-1/2 h-1/4 md:h-1/2 border-b md:border-b-0 md:border-r border-inkFaint flex items-center justify-center hover:bg-white/40 transition-colors cursor-pointer group" onclick="app.enterSite('studio')">
+            <div class="text-center transform group-hover:-translate-y-1 transition-transform duration-500">
+                <span class="font-mono text-[0.65rem] tracking-widest text-inkMuted block mb-4">03</span>
+                <span class="font-serif text-lg md:text-xl tracking-widest text-ink">表現と感性</span>
+                <span class="font-mono text-[0.65rem] text-inkMuted block mt-4 uppercase">Studio</span>
+            </div>
+        </div>
+        <div class="w-full md:w-1/2 h-1/4 md:h-1/2 flex items-center justify-center hover:bg-white/40 transition-colors cursor-pointer group" onclick="app.enterSite('daily')">
+            <div class="text-center transform group-hover:-translate-y-1 transition-transform duration-500">
+                <span class="font-mono text-[0.65rem] tracking-widest text-inkMuted block mb-4">04</span>
+                <span class="font-serif text-lg md:text-xl tracking-widest text-ink">時間と観測</span>
+                <span class="font-mono text-[0.65rem] text-inkMuted block mt-4 uppercase">Daily</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="observation-bar" class="fixed bottom-0 left-0 w-full bg-ink text-beige z-40 transform translate-y-full transition-transform duration-700 ease-in-out py-6 px-8 md:px-12 shadow-2xl flex items-center justify-center min-h-[5rem]">
+        <p id="observation-text" class="font-serif text-sm md:text-base tracking-widest leading-relaxed text-center max-w-4xl"></p>
+    </div>
+
     <!-- Sidebar Navigation -->
     <aside class="w-full md:w-64 h-auto md:h-screen flex-shrink-0 border-b md:border-b-0 md:border-r border-inkFaint flex flex-col py-8 px-8 md:py-16 md:px-12 bg-beige z-20">
         <div class="mb-12 border-b border-inkFaint pb-4">
-            <button onclick="app.switchTab('focus')" class="text-left w-full hover:opacity-60 transition-opacity focus:outline-none">
+            <button onclick="app.triggerObservation()" class="text-left w-full hover:opacity-60 transition-opacity focus:outline-none">
                 <h1 class="text-sm tracking-widest font-mono text-ink">
                     Kobayashi<br>Rintaro
                 </h1>
@@ -128,8 +163,11 @@
                 <li class="relative"><button onclick="app.switchTab('contact')" id="nav-contact" class="nav-item hover:text-ink transition-colors text-left w-full">Contact</button></li>
                 <li class="relative"><button onclick="app.switchTab('sns')" id="nav-sns" class="nav-item hover:text-ink transition-colors text-left w-full">SNS</button></li>
             </ul>
-            <p class="pt-8 font-mono text-[0.65rem] text-inkMuted tracking-wider">2026</p>
-        </nav>
+            <div class="pt-8 flex justify-between items-end">
+                <p class="font-mono text-[0.65rem] text-inkMuted tracking-wider">2026</p>
+                <button onclick="app.showLandingPage()" class="font-mono text-[0.65rem] text-inkMuted tracking-wider hover:text-ink transition-colors uppercase focus:outline-none">Index</button>
+            </div>
+            </nav>
     </aside>
 
     <!-- Main Content Area -->
@@ -141,6 +179,18 @@
 
     <!-- Application Logic -->
     <script>
+        const fragments = [
+            "言語とは何か？は言語無しには答えられない。",
+            "語りえぬものについては、沈黙しなければならない。 — L. Wittgenstein",
+            "部分と全体 — W. Heisenberg",
+            "相補性。粒子性と波動性を合わせて初めて完全な記述が可能となる。",
+            "物理学の任務は、自然がどうであるかを発見することではない。自然について我々が何を語り得るかを発見することである。 — N. Bohr",
+            "望みを緩める",
+            "大いなる流れに触れる",
+            "ほとんど恐怖に近い感動",
+            "理論が決定するのは、私たちが何を観測できるかである。 — A. Einstein",
+            "音を作るのではなく、すでにそこにある響きを迎え入れること。"
+        ];
         const database = {
             focus: [
                 {
@@ -259,48 +309,96 @@
 
         const app = {
             currentTab: 'focus',
+            observationTimeout: null, // バーの自動非表示用タイマー
 
             init() {
                 const hash = window.location.hash.replace('#', '');
                 const validTabs = ['focus', 'lab', 'studio', 'daily', 'bio', 'contact', 'sns'];
+                const overlay = document.getElementById('landing-overlay');
                 
-                // URLハッシュの解析と適切なタブへのルーティング
                 if (hash) {
+                    // ハッシュがある場合は導入画面を非表示にして直接該当ページへ
+                    overlay.style.display = 'none';
                     if (validTabs.includes(hash)) {
                         this.currentTab = hash;
                     } else if (hash.startsWith('group-') || hash.startsWith('img-')) {
-                        // ハッシュがgroup-かimg-で始まるなら、Studioタブを開く
                         this.currentTab = 'studio';
                     }
-                }
-                
-                this.switchTab(this.currentTab, false);
-
-                // DOM描画完了後に、指定されたアンカー（作品群）へスクロールさせる
-                if (hash && (hash.startsWith('group-') || hash.startsWith('img-'))) {
-                    setTimeout(() => {
-                        const target = document.getElementById(hash);
-                        if (target) {
-                            target.scrollIntoView();
-                        }
-                    }, 100); // 描画ラグを考慮した遅延
+                    this.switchTab(this.currentTab, false);
+                    this.scrollToHash(hash);
+                } else {
+                    // ハッシュがない場合は導入画面を表示
+                    overlay.style.display = 'flex';
                 }
 
-                // ブラウザの「戻る/進む」操作への対応を拡張
                 window.addEventListener('popstate', () => {
                     const currentHash = window.location.hash.replace('#', '');
                     if (validTabs.includes(currentHash)) {
                         this.switchTab(currentHash, false);
                     } else if (currentHash.startsWith('group-') || currentHash.startsWith('img-')) {
                         this.switchTab('studio', false);
+                    } else if (currentHash === '') {
+                        // ハッシュが空になったら導入画面へ戻る
+                        this.showLandingPage();
                     }
                 });
+            },
+
+            // 導入画面からサイトへ入る
+            enterSite(tabId) {
+                const overlay = document.getElementById('landing-overlay');
+                overlay.classList.add('opacity-0');
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                    this.switchTab(tabId);
+                }, 1000); // 1秒かけてフェードアウト
+            },
+
+            // 導入画面を再表示する
+            showLandingPage() {
+                const overlay = document.getElementById('landing-overlay');
+                overlay.style.display = 'flex';
+                // display:flex が適用された直後にopacityを戻すための微小な遅延
+                setTimeout(() => {
+                    overlay.classList.remove('opacity-0');
+                }, 50);
+                
+                // URLからハッシュを消去
+                window.history.pushState(null, null, window.location.pathname);
+            },
+
+            // ロゴクリック：現在の画面を維持したままバーを表示
+            triggerObservation() {
+                const bar = document.getElementById('observation-bar');
+                const textElement = document.getElementById('observation-text');
+                const randomIndex = Math.floor(Math.random() * fragments.length);
+                
+                textElement.innerHTML = fragments[randomIndex];
+                
+                // バーを浮上させる (translate-y-full クラスを外す)
+                bar.classList.remove('translate-y-full');
+
+                // 8秒後に自動でバーを隠す。連続クリックされた場合はタイマーをリセット
+                if (this.observationTimeout) clearTimeout(this.observationTimeout);
+                this.observationTimeout = setTimeout(() => {
+                    bar.classList.add('translate-y-full');
+                }, 8000);
+            },
+
+            scrollToHash(hash) {
+                if (hash && (hash.startsWith('group-') || hash.startsWith('img-'))) {
+                    setTimeout(() => {
+                        const target = document.getElementById(hash);
+                        if (target) {
+                            target.scrollIntoView();
+                        }
+                    }, 100);
+                }
             },
 
             switchTab(tabId, updateHistory = true) {
                 this.currentTab = tabId;
                 
-                // URLハッシュを更新し、状態を記録する
                 if (updateHistory) {
                     window.history.pushState(null, null, '#' + tabId);
                 }
@@ -577,6 +675,7 @@
     </script>
 </body>
 </html>
+
 
 
 
