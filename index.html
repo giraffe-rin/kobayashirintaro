@@ -331,41 +331,52 @@
             },
 
             getStudioHtml() {
-                // Sticky Thumbnail Grid at the top
-                const thumbHtml = database.studio.map(item => `
-                    <a href="#img-${item.id}" class="aspect-[4/3] w-full img-placeholder hover:opacity-70 transition-opacity overflow-hidden">
-                        ${item.image ? `<img src="${item.image}" class="w-full h-full object-cover" loading="lazy" alt="thumbnail">` : `<span class="text-[0.6rem]">${item.id + 1}</span>`}
-                    </a>
-                `).join('');
+                let html = '<div class="w-full pb-32">';
 
-                // Full size images stacked vertically
-                const fullImagesHtml = database.studio.map(item => `
-                    <div id="img-${item.id}" class="scroll-mt-32 mb-32 group">
-                        <div class="w-full h-[60vh] md:h-[80vh] img-placeholder mb-6 overflow-hidden">
-                            ${item.image ? `<img src="${item.image}" class="w-full h-full object-contain" loading="lazy" alt="${item.title}">` : `<span class="font-mono text-sm text-inkMuted">No Image</span>`}
-                        </div>
-                        <div class="flex justify-between items-baseline border-b border-transparent group-hover:border-inkFaint pb-2 transition-colors">
-                            <h2 class="font-serif text-base tracking-widest">${item.title || 'Untitled'}</h2>
-                            <div class="font-mono text-xs text-inkMuted">
-                                ${item.meta}
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
+                database.studio.forEach(group => {
+                    // カテゴリ見出し
+                    html += `
+                        <div class="mb-24">
+                            <h3 class="font-serif text-xl md:text-2xl tracking-widest border-b border-inkFaint pb-4 mb-8 text-inkMuted">${group.groupName}</h3>
+                    `;
 
-                return `
-                    <div class="w-full">
-                        <div class="sticky top-0 bg-beige/95 backdrop-blur-sm z-10 py-4 mb-12 border-b border-inkFaint">
-                            <div class="grid grid-cols-4 md:grid-cols-8 gap-2">
+                    // サムネイルグリッド（カテゴリごと）
+                    const thumbHtml = group.items.map(item => `
+                        <a href="#img-${item.id}" class="aspect-[4/3] w-full img-placeholder hover:opacity-70 transition-opacity overflow-hidden">
+                            ${item.image ? `<img src="${item.image}" class="w-full h-full object-cover" loading="lazy" alt="thumbnail">` : `<span class="text-[0.6rem] font-mono">No Img</span>`}
+                        </a>
+                    `).join('');
+
+                    html += `
+                            <div class="grid grid-cols-4 md:grid-cols-8 gap-2 mb-16">
                                 ${thumbHtml}
                             </div>
+                    `;
+
+                    // メイン画像（カテゴリごと）
+                    const fullImagesHtml = group.items.map(item => `
+                        <div id="img-${item.id}" class="scroll-mt-32 mb-32 group/img">
+                            <div class="w-full h-[60vh] md:h-[80vh] img-placeholder mb-6 overflow-hidden">
+                                ${item.image ? `<img src="${item.image}" class="w-full h-full object-contain" loading="lazy" alt="${item.title}">` : `<span class="font-mono text-sm text-inkMuted">No Image</span>`}
+                            </div>
+                            <div class="flex justify-between items-baseline border-b border-transparent group-hover/img:border-inkFaint pb-2 transition-colors">
+                                <h2 class="font-serif text-base tracking-widest">${item.title || 'Untitled'}</h2>
+                                <div class="font-mono text-xs text-inkMuted">
+                                    ${item.meta}
+                                </div>
+                            </div>
                         </div>
-                        
-                        <div class="w-full">
-                            ${fullImagesHtml}
-                        </div>
-                    </div>
-                `;
+                    `).join('');
+
+                    html += `
+                            <div class="w-full">
+                                ${fullImagesHtml}
+                            </div>
+                        </div> `;
+                });
+
+                html += '</div>';
+                return html;
             },
             
             getDailyHtml() {
@@ -461,6 +472,7 @@
     </script>
 </body>
 </html>
+
 
 
 
