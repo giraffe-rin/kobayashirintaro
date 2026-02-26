@@ -350,14 +350,23 @@
             getStudioHtml() {
                 let html = '<div class="w-full pb-32">';
 
-                database.studio.forEach(group => {
-                    // カテゴリ見出し
+                // 1. サブナビゲーション（インデックス）の生成
+                let subNav = '<div class="flex flex-wrap gap-6 font-mono text-xs text-inkMuted mb-16 border-b border-inkFaint pb-4 sticky top-0 bg-beige/95 backdrop-blur-sm z-20">';
+                database.studio.forEach((group, index) => {
+                    subNav += `<a href="#group-${index}" class="hover:text-ink transition-colors tracking-widest uppercase">${group.groupName}</a>`;
+                });
+                subNav += '</div>';
+                
+                html += subNav;
+
+                // 2. 各カテゴリと画像の生成
+                database.studio.forEach((group, index) => {
                     html += `
-                        <div class="mb-24">
+                        <div id="group-${index}" class="mb-32 scroll-mt-24">
                             <h3 class="font-serif text-xl md:text-2xl tracking-widest border-b border-inkFaint pb-4 mb-8 text-inkMuted">${group.groupName}</h3>
                     `;
 
-                    // サムネイルグリッド（カテゴリごと）
+                    // サムネイルグリッド
                     const thumbHtml = group.items.map(item => `
                         <a href="#img-${item.id}" class="aspect-[4/3] w-full img-placeholder hover:opacity-70 transition-opacity overflow-hidden">
                             ${item.image ? `<img src="${item.image}" class="w-full h-full object-cover" loading="lazy" alt="thumbnail">` : `<span class="text-[0.6rem] font-mono">No Img</span>`}
@@ -370,7 +379,7 @@
                             </div>
                     `;
 
-                    // メイン画像（カテゴリごと）
+                    // メイン画像
                     const fullImagesHtml = group.items.map(item => `
                         <div id="img-${item.id}" class="scroll-mt-32 mb-32 group/img">
                             <div class="w-full h-[60vh] md:h-[80vh] img-placeholder mb-6 overflow-hidden">
@@ -389,7 +398,8 @@
                             <div class="w-full">
                                 ${fullImagesHtml}
                             </div>
-                        </div> `;
+                        </div>
+                    `;
                 });
 
                 html += '</div>';
@@ -489,6 +499,7 @@
     </script>
 </body>
 </html>
+
 
 
 
