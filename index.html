@@ -341,64 +341,6 @@
                 this.renderMath();
             },
 
-            getFocusHtml() {
-                return `
-                    <div class="space-y-24">
-                        ${database.focus.map(item => `
-                            <article>
-                                <div class="font-mono text-xs text-inkMuted mb-4 tracking-widest">${item.category}</div>
-                                <h2 class="text-2xl md:text-3xl font-normal tracking-wide mb-8">${item.title}</h2>
-                                <p class="text-sm md:text-base leading-relaxed text-ink max-w-2xl">${item.desc}</p>
-                                
-                                ${item.image ? `
-                                <div class="mt-8 max-w-xs md:max-w-sm">
-                                    <img src="${item.image}" alt="Reference" class="w-full h-auto border border-inkFaint shadow-sm">
-                                    ${item.imageCaption ? `<div class="font-mono text-[0.65rem] text-inkMuted mt-2 text-right leading-relaxed">${item.imageCaption}</div>` : ''}
-                                </div>
-                                ` : ''}
-
-                                ${item.linkUrl ? `
-                                <div class="mt-6 font-mono text-sm tracking-wide">
-                                    <a href="${item.linkUrl}" target="_blank" rel="noopener noreferrer" class="inline-block border-b border-ink pb-1 hover:text-inkMuted hover:border-inkMuted transition-colors">
-                                        ${item.linkText || 'External Link'} ↗
-                                    </a>
-                                </div>
-                                ` : ''}
-                                
-                                ${item.hasButton ? `
-                                <div class="mt-8">
-                                    <button class="px-6 py-3 border border-inkFaint font-mono text-xs text-inkMuted hover:border-ink hover:text-ink transition-colors cursor-not-allowed" disabled>
-                                        Archive / Material (Coming soon)
-                                    </button>
-                                </div>
-                                ` : ''}
-                                
-                                <div class="font-mono text-[0.7rem] text-inkMuted mt-12 border-b border-inkFaint pb-8 inline-block pr-12">${item.meta}</div>
-                            </article>
-                        `).join('')}
-                    </div>
-                `;
-            },
-
-            getLabHtml() {
-                const renderPhysics = database.lab.physics.map(item => `
-                    <div class="mb-16 max-w-3xl">
-                        <div class="font-mono text-xs text-inkMuted mb-4 border-l-2 border-inkFaint pl-3">${item.date}</div>
-                        <h3 class="text-xl mb-6 font-normal">${item.title}</h3>
-                        <p class="text-sm leading-loose tracking-wide">${item.content}</p>
-                    </div>
-                `).join('');
-
-                return `
-                    <div>
-                        <h2 class="font-mono text-xs tracking-widest uppercase border-b border-inkFaint mb-12 pb-4 inline-block">Physics / Seminar Log</h2>
-                        <div class="space-y-8">
-                            ${renderPhysics}
-                        </div>
-                    </div>
-                `;
-            },
-
             getStudioHtml() {
                 let html = '<div class="w-full pb-32">';
 
@@ -456,6 +398,64 @@
 
                 html += '</div>';
                 return html;
+            },
+
+            getFocusHtml() {
+                return `
+                    <div class="space-y-24">
+                        ${database.focus.map(item => `
+                            <article>
+                                <div class="font-mono text-xs text-inkMuted mb-4 tracking-widest">${item.category}</div>
+                                <h2 class="text-2xl md:text-3xl font-normal tracking-wide mb-8">${item.title}</h2>
+                                <p class="text-sm md:text-base leading-relaxed text-ink max-w-2xl">${item.desc}</p>
+                                
+                                ${item.image ? `
+                                <div class="mt-8 max-w-xs md:max-w-sm">
+                                    <img src="${item.image}" alt="Reference" class="w-full h-auto border border-inkFaint shadow-sm">
+                                    ${item.imageCaption ? `<div class="font-mono text-[0.65rem] text-inkMuted mt-2 text-right leading-relaxed">${item.imageCaption}</div>` : ''}
+                                </div>
+                                ` : ''}
+
+                                ${item.linkUrl ? `
+                                <div class="mt-6 font-mono text-sm tracking-wide">
+                                    <a href="${item.linkUrl}" target="_blank" rel="noopener noreferrer" class="inline-block border-b border-ink pb-1 hover:text-inkMuted hover:border-inkMuted transition-colors">
+                                        ${item.linkText || 'External Link'} ↗
+                                    </a>
+                                </div>
+                                ` : ''}
+                                
+                                ${item.hasButton ? `
+                                <div class="mt-8">
+                                    <button class="px-6 py-3 border border-inkFaint font-mono text-xs text-inkMuted hover:border-ink hover:text-ink transition-colors cursor-not-allowed" disabled>
+                                        Archive / Material (Coming soon)
+                                    </button>
+                                </div>
+                                ` : ''}
+                                
+                                <div class="font-mono text-[0.7rem] text-inkMuted mt-12 border-b border-inkFaint pb-8 inline-block pr-12">${item.meta}</div>
+                            </article>
+                        `).join('')}
+                    </div>
+                `;
+            },
+
+            getLabHtml() {
+                const renderPhysics = database.lab.physics.map(item => `
+                    <div class="mb-16 max-w-3xl">
+                        <div class="font-mono text-xs text-inkMuted mb-4 border-l-2 border-inkFaint pl-3">${item.date}</div>
+                        <h3 class="text-xl mb-6 font-normal">${item.title}</h3>
+                        <p class="text-sm leading-loose tracking-wide">${item.content}</p>
+                    </div>
+                `).join('');
+
+                return `
+                    <div>
+                        <h2 class="font-mono text-xs tracking-widest uppercase border-b border-inkFaint mb-12 pb-4 inline-block">Physics / Seminar Log</h2>
+                        <div class="space-y-8">
+                            ${renderPhysics}
+                        </div>
+                    </div>
+                `;
             },
             
             getDailyHtml() {
@@ -577,6 +577,7 @@
     </script>
 </body>
 </html>
+
 
 
 
