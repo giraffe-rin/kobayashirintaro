@@ -415,17 +415,28 @@
             
             getDailyHtml() {
                 const itemsHtml = database.daily.map(item => `
-                    <li class="flex items-baseline gap-8 py-4 border-b border-inkFaint/50 last:border-0 hover:bg-white/30 transition-colors px-4 -mx-4">
-                        <time class="font-mono text-xs text-inkMuted w-24 shrink-0">${item.date}</time>
-                        <span class="text-sm tracking-widest">${item.title}</span>
-                    </li>
+                    <article class="flex flex-col md:flex-row items-start gap-4 md:gap-12 py-10 border-b border-inkFaint/50 last:border-0">
+                        <time class="font-mono text-xs text-inkMuted w-28 shrink-0 pt-1">${item.date}</time>
+                        <div class="flex-1 w-full">
+                            <h3 class="font-serif text-base tracking-widest mb-4">${item.title}</h3>
+                            
+                            ${item.content ? `<p class="text-sm leading-loose tracking-wide text-inkMuted mb-6 whitespace-pre-wrap">${item.content}</p>` : ''}
+                            
+                            ${item.image ? `
+                            <div class="mt-4 max-w-md">
+                                <img src="${item.image}" alt="${item.title}" loading="lazy" class="w-full h-auto object-cover border border-inkFaint/30">
+                            </div>
+                            ` : ''}
+                        </div>
+                    </article>
                 `).join('');
 
                 return `
-                    <div class="max-w-xl pt-4">
-                        <ul class="space-y-2">
+                    <div class="max-w-3xl pt-4 pb-32">
+                        <h2 class="font-mono text-xs tracking-widest uppercase border-b border-inkFaint mb-12 pb-4 inline-block">Daily Log</h2>
+                        <div class="space-y-4">
                             ${itemsHtml}
-                        </ul>
+                        </div>
                     </div>
                 `;
             },
@@ -506,6 +517,7 @@
     </script>
 </body>
 </html>
+
 
 
 
