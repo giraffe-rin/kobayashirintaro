@@ -228,11 +228,30 @@
             currentTab: 'focus',
 
             init() {
-                this.switchTab(this.currentTab);
+                // URLのハッシュ（#）を確認し、有効なタブ名であれば復元する
+                const hash = window.location.hash.replace('#', '');
+                const validTabs = ['focus', 'lab', 'studio', 'daily', 'bio', 'contact', 'sns'];
+                if (hash && validTabs.includes(hash)) {
+                    this.currentTab = hash;
+                }
+                this.switchTab(this.currentTab, false);
+
+                // ブラウザの「戻る/進む」操作への対応
+                window.addEventListener('popstate', () => {
+                    const currentHash = window.location.hash.replace('#', '');
+                    if (validTabs.includes(currentHash)) {
+                        this.switchTab(currentHash, false);
+                    }
+                });
             },
 
-            switchTab(tabId) {
+            switchTab(tabId, updateHistory = true) {
                 this.currentTab = tabId;
+                
+                // URLハッシュを更新し、状態を記録する
+                if (updateHistory) {
+                    window.history.pushState(null, null, '#' + tabId);
+                }
                 
                 document.querySelectorAll('.nav-item').forEach(el => {
                     el.classList.remove('nav-active', 'text-ink');
@@ -244,9 +263,7 @@
                     activeNav.classList.add('nav-active', 'text-ink');
                 }
 
-                // Reset scroll position when switching tabs
                 document.querySelector('main').scrollTop = 0;
-
                 this.render();
             },
 
@@ -472,6 +489,7 @@
     </script>
 </body>
 </html>
+
 
 
 
