@@ -146,7 +146,13 @@
                     title: "自主ゼミ：物理学小教程「力学・場の理論」",
                     desc: "ランダウ=リフシッツ体系の精読。現在は『場の理論』後半部を進行中。最小作用の原理 $\\delta S = 0$ を起点とし、物理法則の普遍的な構造を導出するプロセスを追う。<br><br>ゼミは週1回対面（長期休暇中はZoom併用）で実施している。参加・見学、あるいは議論を希望される方は、Contactより連絡されたい。",
                     meta: "Weekly / Landau-Lifshitz",
-                    hasButton: true
+                    hasButton: true,
+                    // --- ここから追加するプロパティ ---
+                    image: "landau-book.jpg", // 用意した画像のファイル名を指定
+                    imageCaption: "書影：『物理学小教程 力学・場の理論』（ちくま学芸文庫）", // 引用元や注釈
+                    linkUrl: "https://www.amazon.co.jp/%E5%8A%9B%E5%AD%A6%E3%83%BB%E5%A0%B4%E3%81%AE%E7%90%86%E8%AB%96%E2%80%95%E3%83%A9%E3%83%B3%E3%83%80%E3%82%A6-%E3%83%AA%E3%83%95%E3%82%B7%E3%83%83%E3%83%84%E7%89%A9%E7%90%86%E5%AD%A6%E5%B0%8F%E6%95%99%E7%A8%8B-%E3%81%A1%E3%81%8F%E3%81%BE%E5%AD%A6%E8%8A%B8%E6%96%87%E5%BA%AB-L-D-%E3%83%A9%E3%83%B3%E3%83%80%E3%82%A6/dp/4480091114", // 実際のAmazon等のリンク
+                    linkText: "テキスト詳細を確認"
+                    // --- ここまで ---
                 },
                 {
                     category: "Research",
@@ -154,6 +160,7 @@
                     desc: "位相空間上の格子構造を利用した誤り訂正メカニズムの検証。2026年3月初旬の論文提出に向けた最終調整。連続変数量子計算における不可避なエラーの補正手法について。",
                     meta: "2026 / Thesis",
                     hasButton: false
+                    // ※GKPの項目には画像・リンクがないため、プロパティを記述しなければ自動的に非表示になります。
                 }
             ],
             lab: {
@@ -311,6 +318,21 @@
                                 <div class="font-mono text-xs text-inkMuted mb-4 tracking-widest">${item.category}</div>
                                 <h2 class="text-2xl md:text-3xl font-normal tracking-wide mb-8">${item.title}</h2>
                                 <p class="text-sm md:text-base leading-relaxed text-ink max-w-2xl">${item.desc}</p>
+                                
+                                ${item.image ? `
+                                <div class="mt-8 max-w-xs md:max-w-sm">
+                                    <img src="${item.image}" alt="Reference" class="w-full h-auto border border-inkFaint shadow-sm">
+                                    ${item.imageCaption ? `<div class="font-mono text-[0.65rem] text-inkMuted mt-2 text-right leading-relaxed">${item.imageCaption}</div>` : ''}
+                                </div>
+                                ` : ''}
+
+                                ${item.linkUrl ? `
+                                <div class="mt-6 font-mono text-sm tracking-wide">
+                                    <a href="${item.linkUrl}" target="_blank" rel="noopener noreferrer" class="inline-block border-b border-ink pb-1 hover:text-inkMuted hover:border-inkMuted transition-colors">
+                                        ${item.linkText || 'External Link'} ↗
+                                    </a>
+                                </div>
+                                ` : ''}
                                 
                                 ${item.hasButton ? `
                                 <div class="mt-8">
@@ -477,6 +499,7 @@
     </script>
 </body>
 </html>
+
 
 
 
