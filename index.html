@@ -349,19 +349,19 @@
             getStudioHtml() {
                 // Sticky Thumbnail Grid at the top
                 const thumbHtml = database.studio.map(item => `
-                    <a href="#img-${item.id}" class="aspect-[4/3] w-full img-placeholder hover:opacity-70 transition-opacity">
-                        <span class="text-[0.6rem]">${item.id + 1}</span>
+                    <a href="#img-${item.id}" class="aspect-[4/3] w-full img-placeholder hover:opacity-70 transition-opacity overflow-hidden">
+                        ${item.image ? `<img src="${item.image}" class="w-full h-full object-cover" loading="lazy" alt="thumbnail">` : `<span class="text-[0.6rem]">${item.id + 1}</span>`}
                     </a>
                 `).join('');
 
                 // Full size images stacked vertically
                 const fullImagesHtml = database.studio.map(item => `
                     <div id="img-${item.id}" class="scroll-mt-32 mb-32 group">
-                        <div class="w-full h-[60vh] md:h-[80vh] img-placeholder text-xl mb-6">
-                            ${item.image}
+                        <div class="w-full h-[60vh] md:h-[80vh] img-placeholder mb-6 overflow-hidden">
+                            ${item.image ? `<img src="${item.image}" class="w-full h-full object-contain" loading="lazy" alt="${item.title}">` : `<span class="font-mono text-sm text-inkMuted">No Image</span>`}
                         </div>
                         <div class="flex justify-between items-baseline border-b border-transparent group-hover:border-inkFaint pb-2 transition-colors">
-                            <h2 class="font-serif text-base tracking-widest">${item.title}</h2>
+                            <h2 class="font-serif text-base tracking-widest">${item.title || 'Untitled'}</h2>
                             <div class="font-mono text-xs text-inkMuted">
                                 ${item.meta}
                             </div>
@@ -383,7 +383,7 @@
                     </div>
                 `;
             },
-
+            
             getDailyHtml() {
                 const itemsHtml = database.daily.map(item => `
                     <li class="flex items-baseline gap-8 py-4 border-b border-inkFaint/50 last:border-0 hover:bg-white/30 transition-colors px-4 -mx-4">
@@ -477,5 +477,6 @@
     </script>
 </body>
 </html>
+
 
 
