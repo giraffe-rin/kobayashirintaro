@@ -441,37 +441,52 @@
 
             getFocusHtml() {
                 return `
-                    <div class="space-y-24">
+                    <div class="space-y-32">
                         ${database.focus.map(item => `
-                            <article>
+                            <article class="relative">
                                 <div class="font-mono text-xs text-inkMuted mb-4 tracking-widest">${item.category}</div>
-                                <h2 class="text-2xl md:text-3xl font-normal tracking-wide mb-8">${item.title}</h2>
-                                <p class="text-sm md:text-base leading-relaxed text-ink max-w-2xl">${item.desc}</p>
+                                <h2 class="text-2xl md:text-3xl font-normal tracking-wide mb-10">${item.title}</h2>
                                 
-                                ${item.image ? `
-                                <div class="mt-8 max-w-xs md:max-w-sm">
-                                    <img src="${item.image}" alt="Reference" class="w-full h-auto border border-inkFaint shadow-sm">
-                                    ${item.imageCaption ? `<div class="font-mono text-[0.65rem] text-inkMuted mt-2 text-right leading-relaxed">${item.imageCaption}</div>` : ''}
-                                </div>
-                                ` : ''}
+                                <div class="flex flex-col md:flex-row gap-8 md:gap-16 items-start">
+                                    
+                                    <div class="flex-1 max-w-2xl">
+                                        <p class="text-sm md:text-base leading-relaxed text-ink">${item.desc}</p>
+                                        
+                                        ${item.linkUrl ? `
+                                        <div class="mt-8 font-mono text-sm tracking-wide">
+                                            <a href="${item.linkUrl}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 border-b border-ink pb-1 hover:text-inkMuted hover:border-inkMuted transition-colors">
+                                                <span>${item.linkText || 'External Link'}</span>
+                                                <span class="text-xs">↗</span>
+                                            </a>
+                                        </div>
+                                        ` : ''}
+                                        
+                                        ${item.hasButton ? `
+                                        <div class="mt-8">
+                                            <button class="px-6 py-3 border border-inkFaint font-mono text-xs text-inkMuted hover:border-ink hover:text-ink transition-colors cursor-not-allowed" disabled>
+                                                Archive / Material (Coming soon)
+                                            </button>
+                                        </div>
+                                        ` : ''}
 
-                                ${item.linkUrl ? `
-                                <div class="mt-6 font-mono text-sm tracking-wide">
-                                    <a href="${item.linkUrl}" target="_blank" rel="noopener noreferrer" class="inline-block border-b border-ink pb-1 hover:text-inkMuted hover:border-inkMuted transition-colors">
-                                        ${item.linkText || 'External Link'} ↗
-                                    </a>
+                                        <div class="font-mono text-[0.7rem] text-inkMuted mt-12 border-t border-inkFaint pt-6 inline-block pr-12">
+                                            ${item.meta}
+                                        </div>
+                                    </div>
+                                    
+                                    ${item.image ? `
+                                    <div class="w-full md:w-56 shrink-0 mt-10 md:mt-0 relative group">
+                                        <img src="${item.image}" alt="Reference" class="w-full h-auto object-cover border border-inkFaint shadow-sm grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700 ease-out">
+                                        
+                                        ${item.imageCaption ? `
+                                        <div class="font-mono text-[0.6rem] text-inkMuted mt-3 text-right leading-relaxed opacity-70">
+                                            ${item.imageCaption}
+                                        </div>
+                                        ` : ''}
+                                    </div>
+                                    ` : ''}
+                                    
                                 </div>
-                                ` : ''}
-                                
-                                ${item.hasButton ? `
-                                <div class="mt-8">
-                                    <button class="px-6 py-3 border border-inkFaint font-mono text-xs text-inkMuted hover:border-ink hover:text-ink transition-colors cursor-not-allowed" disabled>
-                                        Archive / Material (Coming soon)
-                                    </button>
-                                </div>
-                                ` : ''}
-                                
-                                <div class="font-mono text-[0.7rem] text-inkMuted mt-12 border-b border-inkFaint pb-8 inline-block pr-12">${item.meta}</div>
                             </article>
                         `).join('')}
                     </div>
@@ -675,6 +690,7 @@
     </script>
 </body>
 </html>
+
 
 
 
