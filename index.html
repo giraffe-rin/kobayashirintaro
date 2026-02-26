@@ -213,13 +213,13 @@
                     date: "Monday, February 23, 2026", 
                     title: "自主ゼミ開催", 
                     content: "",
-                    image: "" // 画像がない場合は空欄
+                    image: [] // 画像がない場合は空欄
                 },
                 { 
                     date: "Thursday, February 19", 
                     title: "柏原市散策", 
                     content: "自主ゼミのメンバーの案内で柏原市（河津国分駅周辺）を巡った。",
-                    image: "20260219_kashiwara_1.jpeg" // 画像がない場合は空欄
+                    image: ["20260219_kashiwara_1.jpeg", "20260219_kashiwara_2.jpeg"] // 画像がない場合は空欄
                 }
             ],
             bio: {
@@ -421,25 +421,40 @@
             },
             
             getDailyHtml() {
-                const itemsHtml = database.daily.map(item => `
+                const itemsHtml = database.daily.map(item => {
+                    // 複数画像のグリッド展開ロジック
+                    let imagesHtml = '';
+                    if (item.images && item.images.length > 0) {
+                        // 1枚なら1カラム、2枚以上なら2カラムのグリッドにする
+                        const gridClass = item.images.length === 1 ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2';
+                        
+                        const imgTags = item.images.map(img => `
+                            <img src="${img}" alt="daily log image" loading="lazy" class="w-full h-auto object-cover aspect-[4/3] border border-inkFaint/30">
+                        `).join('');
+
+                        imagesHtml = `
+                            <div class="mt-6 grid ${gridClass} gap-2 max-w-lg">
+                                ${imgTags}
+                            </div>
+                        `;
+                    }
+
+                    return `
                     <article class="flex flex-col md:flex-row items-start gap-4 md:gap-12 py-10 border-b border-inkFaint/50 last:border-0">
-                        <time class="font-mono text-xs text-inkMuted w-28 shrink-0 pt-1">${item.date}</time>
+                        <time class="font-mono text-[0.65rem] md:text-xs text-inkMuted w-40 shrink-0 pt-1 leading-relaxed">${item.date}</time>
                         <div class="flex-1 w-full">
                             <h3 class="font-serif text-base tracking-widest mb-4">${item.title}</h3>
                             
-                            ${item.content ? `<p class="text-sm leading-loose tracking-wide text-inkMuted mb-6 whitespace-pre-wrap">${item.content}</p>` : ''}
+                            ${item.content ? `<p class="text-sm leading-loose tracking-wide text-inkMuted whitespace-pre-wrap">${item.content}</p>` : ''}
                             
-                            ${item.image ? `
-                            <div class="mt-4 max-w-md">
-                                <img src="${item.image}" alt="${item.title}" loading="lazy" class="w-full h-auto object-cover border border-inkFaint/30">
-                            </div>
-                            ` : ''}
+                            ${imagesHtml}
                         </div>
                     </article>
-                `).join('');
+                    `;
+                }).join('');
 
                 return `
-                    <div class="max-w-3xl pt-4 pb-32">
+                    <div class="max-w-4xl pt-4 pb-32">
                         <h2 class="font-mono text-xs tracking-widest uppercase border-b border-inkFaint mb-12 pb-4 inline-block">Daily Log</h2>
                         <div class="space-y-4">
                             ${itemsHtml}
@@ -524,6 +539,7 @@
     </script>
 </body>
 </html>
+
 
 
 
