@@ -106,9 +106,11 @@
     <!-- Sidebar Navigation -->
     <aside class="w-full md:w-64 h-auto md:h-screen flex-shrink-0 border-b md:border-b-0 md:border-r border-inkFaint flex flex-col py-8 px-8 md:py-16 md:px-12 bg-beige z-20">
         <div class="mb-12 border-b border-inkFaint pb-4">
-            <h1 class="text-sm tracking-widest font-mono">
-                Kobayashi<br>Rintaro
-            </h1>
+            <button onclick="app.switchTab('focus')" class="text-left w-full hover:opacity-60 transition-opacity focus:outline-none">
+                <h1 class="text-sm tracking-widest font-mono text-ink">
+                    Kobayashi<br>Rintaro
+                </h1>
+            </button>
         </div>
         
         <nav class="flex-grow">
@@ -259,19 +261,38 @@
             currentTab: 'focus',
 
             init() {
-                // URLのハッシュ（#）を確認し、有効なタブ名であれば復元する
                 const hash = window.location.hash.replace('#', '');
                 const validTabs = ['focus', 'lab', 'studio', 'daily', 'bio', 'contact', 'sns'];
-                if (hash && validTabs.includes(hash)) {
-                    this.currentTab = hash;
+                
+                // URLハッシュの解析と適切なタブへのルーティング
+                if (hash) {
+                    if (validTabs.includes(hash)) {
+                        this.currentTab = hash;
+                    } else if (hash.startsWith('group-') || hash.startsWith('img-')) {
+                        // ハッシュがgroup-かimg-で始まるなら、Studioタブを開く
+                        this.currentTab = 'studio';
+                    }
                 }
+                
                 this.switchTab(this.currentTab, false);
 
-                // ブラウザの「戻る/進む」操作への対応
+                // DOM描画完了後に、指定されたアンカー（作品群）へスクロールさせる
+                if (hash && (hash.startsWith('group-') || hash.startsWith('img-'))) {
+                    setTimeout(() => {
+                        const target = document.getElementById(hash);
+                        if (target) {
+                            target.scrollIntoView();
+                        }
+                    }, 100); // 描画ラグを考慮した遅延
+                }
+
+                // ブラウザの「戻る/進む」操作への対応を拡張
                 window.addEventListener('popstate', () => {
                     const currentHash = window.location.hash.replace('#', '');
                     if (validTabs.includes(currentHash)) {
                         this.switchTab(currentHash, false);
+                    } else if (currentHash.startsWith('group-') || currentHash.startsWith('img-')) {
+                        this.switchTab('studio', false);
                     }
                 });
             },
@@ -556,6 +577,7 @@
     </script>
 </body>
 </html>
+
 
 
 
