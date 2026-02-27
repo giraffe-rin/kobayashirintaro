@@ -327,7 +327,7 @@
                     if (validTabs.includes(currentHash)) {
                         this.switchTab(currentHash, false);
                     } else if (currentHash.startsWith('group-') || currentHash.startsWith('img-')) {
-                        this.switchTab('studio', false);
+                        // ページ内スクロールによる発火を無視
                     } else if (currentHash === '') {
                         this.showLandingPage();
                     }
@@ -380,13 +380,31 @@
                 }, 8000);
             },
 
+            scrollToId(id) {
+                const target = document.getElementById(id);
+                const mainArea = document.getElementById('main-scroll-area');
+                if (target && mainArea) {
+                    const subNav = document.querySelector('.sticky');
+                    // 折り返しによって変動する固定ナビゲーションの高さを取得し、余白（32px）を加算
+                    const offset = subNav ? subNav.offsetHeight + 32 : 120;
+                    
+                    const targetRect = target.getBoundingClientRect();
+                    const mainRect = mainArea.getBoundingClientRect();
+                    
+                    // スクロールコンテナ上での相対位置を厳密に計算
+                    const scrollPos = targetRect.top - mainRect.top + mainArea.scrollTop - offset;
+
+                    mainArea.scrollTo({
+                        top: scrollPos,
+                        behavior: 'smooth'
+                    });
+                }
+            },
+
             scrollToHash(hash) {
                 if (hash && (hash.startsWith('group-') || hash.startsWith('img-'))) {
                     setTimeout(() => {
-                        const target = document.getElementById(hash);
-                        if (target) {
-                            target.scrollIntoView({ behavior: 'smooth' });
-                        }
+                        this.scrollToId(hash);
                     }, 100);
                 }
             },
@@ -408,7 +426,6 @@
                     activeNav.classList.add('nav-active', 'text-ink');
                 }
 
-                // モバイル解像度の場合、ナビゲーション選択後にメニューを閉じる
                 if (window.innerWidth < 768) {
                     const nav = document.getElementById('nav-container');
                     const btn = document.getElementById('mobile-menu-btn');
@@ -419,7 +436,6 @@
                     }
                 }
 
-                // コンテンツ領域のスクロール位置をリセット
                 const mainArea = document.getElementById('main-scroll-area');
                 if (mainArea) {
                     mainArea.scrollTop = 0;
@@ -506,7 +522,7 @@
 
                 let subNav = '<div class="flex flex-wrap gap-6 font-mono text-xs text-inkMuted mb-16 border-b border-inkFaint pb-4 pt-10 sticky top-0 bg-beige/95 backdrop-blur-sm z-20 -mx-6 px-6 md:-mx-0 md:px-0">';
                 database.studio.forEach((group, index) => {
-                    subNav += `<a href="#group-${index}" class="hover:text-ink transition-colors tracking-widest uppercase">${group.groupName}</a>`;
+                    subNav += `<button onclick="app.scrollToId('group-${index}')" class="hover:text-ink transition-colors tracking-widest uppercase focus:outline-none text-left">${group.groupName}</button>`;
                 });
                 subNav += '</div>';
                 html += subNav;
@@ -518,9 +534,9 @@
                     `;
 
                     const thumbHtml = group.items.map(item => `
-                        <a href="#img-${item.id}" class="aspect-[4/3] w-full img-placeholder hover:opacity-70 transition-opacity overflow-hidden">
+                        <button onclick="app.scrollToId('img-${item.id}')" class="aspect-[4/3] w-full img-placeholder hover:opacity-70 transition-opacity overflow-hidden focus:outline-none block">
                             ${item.image ? `<img src="${item.image}" class="w-full h-full object-cover" loading="lazy" alt="thumbnail" onerror="this.parentElement.innerHTML='<span class=\\'text-[0.6rem] font-mono\\'>No Img</span>'">` : `<span class="text-[0.6rem] font-mono">No Img</span>`}
-                        </a>
+                        </button>
                     `).join('');
 
                     html += `
