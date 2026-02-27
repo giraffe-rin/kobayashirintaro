@@ -133,7 +133,7 @@
         </div>
     </div>
 
-    <div id="observation-bar" class="fixed bottom-0 left-0 w-full bg-ink text-beige z-40 transform translate-y-full transition-transform duration-700 ease-in-out py-6 px-8 md:px-12 shadow-2xl flex items-center justify-center min-h-[5rem]">
+    <div id="observation-bar" class="fixed bottom-0 left-0 w-full bg-ink text-beige z-10 transform translate-y-full transition-transform duration-700 ease-in-out py-6 px-8 md:px-12 shadow-2xl flex items-center justify-center min-h-[5rem]">
         <p id="observation-text" class="font-serif text-sm md:text-base tracking-widest leading-relaxed text-center max-w-4xl"></p>
     </div>
 
@@ -502,7 +502,8 @@
                                     
                                     ${item.image ? `
                                     <div class="w-full md:w-56 shrink-0 mt-10 md:mt-0 relative group">
-                                        <img src="${item.image}" alt="Reference" class="w-full h-auto object-cover border border-inkFaint shadow-sm grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700 ease-out" onerror="this.style.display='none'">
+                                        <img src="${item.image}" alt="Reference" class="w-full h-auto object-cover border border-inkFaint shadow-sm grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700 ease-out">
+                                        
                                         ${item.imageCaption ? `
                                         <div class="font-mono text-[0.6rem] text-inkMuted mt-3 text-right leading-relaxed opacity-70">
                                             ${item.imageCaption}
@@ -704,3 +705,4 @@
     </script>
 </body>
 </html>
+
