@@ -92,7 +92,6 @@
             letter-spacing: 0.05em;
         }
 
-        /* Prevent anchor jump from hiding content under sticky header */
         html {
             scroll-behavior: smooth;
         }
@@ -101,7 +100,7 @@
         }
     </style>
 </head>
-<body class="flex flex-col md:flex-row h-screen w-full">
+<body class="flex flex-col md:flex-row h-[100dvh] w-full">
 
     <div id="landing-overlay" class="fixed inset-0 z-50 bg-beige flex flex-col md:flex-row flex-wrap transition-opacity duration-1000">
         <div class="w-full md:w-1/2 h-1/4 md:h-1/2 border-b md:border-b md:border-r border-inkFaint flex items-center justify-center hover:bg-white/40 transition-colors cursor-pointer group" onclick="app.enterSite('focus')">
@@ -139,39 +138,47 @@
     </div>
 
     <!-- Sidebar Navigation -->
-    <aside class="w-full md:w-64 h-auto md:h-screen flex-shrink-0 border-b md:border-b-0 md:border-r border-inkFaint flex flex-col py-8 px-8 md:py-16 md:px-12 bg-beige z-20">
-        <div class="mb-12 border-b border-inkFaint pb-4">
-            <button onclick="app.triggerObservation()" class="text-left w-full hover:opacity-60 transition-opacity focus:outline-none">
-                <h1 class="text-sm tracking-widest font-mono text-ink">
+    <aside class="w-full md:w-64 h-auto md:h-full flex-shrink-0 border-b md:border-b-0 md:border-r border-inkFaint flex flex-col pt-6 pb-0 md:py-16 px-6 md:px-12 bg-beige z-20 transition-all">
+        <!-- Header & Mobile Toggle -->
+        <div class="pb-6 md:pb-4 md:mb-12 border-b-0 md:border-b border-inkFaint flex justify-between items-end md:block">
+            <button onclick="app.triggerObservation()" class="text-left hover:opacity-60 transition-opacity focus:outline-none">
+                <h1 class="text-sm tracking-widest font-mono text-ink leading-relaxed">
                     Kobayashi<br>Rintaro
                 </h1>
             </button>
+            <button onclick="app.toggleMobileMenu()" id="mobile-menu-btn" class="md:hidden font-mono text-[0.65rem] text-inkMuted hover:text-ink transition-colors uppercase tracking-widest border border-inkFaint px-3 py-1">
+                Menu
+            </button>
         </div>
         
-        <nav class="flex-grow">
-            <ul class="space-y-4 font-mono text-xs tracking-wider text-inkMuted">
-                <li class="relative"><button onclick="app.switchTab('focus')" id="nav-focus" class="nav-item hover:text-ink transition-colors text-left w-full">Focus</button></li>
-                <li class="relative"><button onclick="app.switchTab('lab')" id="nav-lab" class="nav-item hover:text-ink transition-colors text-left w-full">Lab</button></li>
-                <li class="relative"><button onclick="app.switchTab('studio')" id="nav-studio" class="nav-item hover:text-ink transition-colors text-left w-full">Studio</button></li>
-                <li class="relative"><button onclick="app.switchTab('daily')" id="nav-daily" class="nav-item hover:text-ink transition-colors text-left w-full">Daily</button></li>
-            </ul>
-        </nav>
-        
-        <nav class="mt-8 pt-8 border-t border-inkFaint">
-            <ul class="space-y-3 font-mono text-[0.7rem] tracking-wider text-inkMuted">
-                <li class="relative"><button onclick="app.switchTab('bio')" id="nav-bio" class="nav-item hover:text-ink transition-colors text-left w-full">Bio</button></li>
-                <li class="relative"><button onclick="app.switchTab('contact')" id="nav-contact" class="nav-item hover:text-ink transition-colors text-left w-full">Contact</button></li>
-                <li class="relative"><button onclick="app.switchTab('sns')" id="nav-sns" class="nav-item hover:text-ink transition-colors text-left w-full">SNS</button></li>
-            </ul>
-            <div class="pt-8 flex justify-between items-end">
-                <p class="font-mono text-[0.65rem] text-inkMuted tracking-wider">2026</p>
-                <button onclick="app.showLandingPage()" class="font-mono text-[0.65rem] text-inkMuted tracking-wider hover:text-ink transition-colors uppercase focus:outline-none">Index</button>
-            </div>
+        <!-- Navigation Container (Collapsible on mobile) -->
+        <div id="nav-container" class="hidden md:flex flex-col flex-grow pb-8 md:pb-0 h-full overflow-y-auto custom-scroll">
+            <div class="md:hidden border-t border-inkFaint mb-6 -mx-6 px-6"></div>
+            <nav class="flex-grow">
+                <ul class="space-y-4 font-mono text-xs tracking-wider text-inkMuted">
+                    <li class="relative"><button onclick="app.switchTab('focus')" id="nav-focus" class="nav-item hover:text-ink transition-colors text-left w-full">Focus</button></li>
+                    <li class="relative"><button onclick="app.switchTab('lab')" id="nav-lab" class="nav-item hover:text-ink transition-colors text-left w-full">Lab</button></li>
+                    <li class="relative"><button onclick="app.switchTab('studio')" id="nav-studio" class="nav-item hover:text-ink transition-colors text-left w-full">Studio</button></li>
+                    <li class="relative"><button onclick="app.switchTab('daily')" id="nav-daily" class="nav-item hover:text-ink transition-colors text-left w-full">Daily</button></li>
+                </ul>
             </nav>
+            
+            <nav class="mt-8 pt-8 border-t border-inkFaint">
+                <ul class="space-y-3 font-mono text-[0.7rem] tracking-wider text-inkMuted">
+                    <li class="relative"><button onclick="app.switchTab('bio')" id="nav-bio" class="nav-item hover:text-ink transition-colors text-left w-full">Bio</button></li>
+                    <li class="relative"><button onclick="app.switchTab('contact')" id="nav-contact" class="nav-item hover:text-ink transition-colors text-left w-full">Contact</button></li>
+                    <li class="relative"><button onclick="app.switchTab('sns')" id="nav-sns" class="nav-item hover:text-ink transition-colors text-left w-full">SNS</button></li>
+                </ul>
+                <div class="pt-8 flex justify-between items-end">
+                    <p class="font-mono text-[0.65rem] text-inkMuted tracking-wider">2026</p>
+                    <button onclick="app.showLandingPage()" class="font-mono text-[0.65rem] text-inkMuted tracking-wider hover:text-ink transition-colors uppercase focus:outline-none">Index</button>
+                </div>
+            </nav>
+        </div>
     </aside>
 
     <!-- Main Content Area -->
-    <main class="flex-1 h-full overflow-y-auto custom-scroll relative">
+    <main id="main-scroll-area" class="flex-1 h-full overflow-y-auto custom-scroll relative bg-beige">
         <div id="content-area" class="w-full max-w-5xl mx-auto px-6 py-12 md:px-24 md:py-24">
             <!-- Content injected via JS -->
         </div>
@@ -199,12 +206,10 @@
                     desc: "現在は『場の理論』後半部を進行中。最小作用の原理を起点とし、古典力学を体系的に学び直す。<br><br>ゼミは概ね週1回近畿大学にて対面（長期休暇中はZoomやDiscord併用）で実施している。曜日はメンバーの都合で流動的に変更されます。参加・見学、あるいは議論を希望される方は、Contactより連絡されたい。",
                     meta: "Weekly / Landau-Lifshitz",
                     hasButton: true,
-                    // --- ここから追加するプロパティ ---
-                    image: "landau-book.jpg", // 用意した画像のファイル名を指定
-                    imageCaption: "書影：『物理学小教程 力学・場の理論』（ちくま学芸文庫）", // 引用元や注釈
-                    linkUrl: "https://www.amazon.co.jp/%E5%8A%9B%E5%AD%A6%E3%83%BB%E5%A0%B4%E3%81%AE%E7%90%86%E8%AB%96%E2%80%95%E3%83%A9%E3%83%B3%E3%83%80%E3%82%A6-%E3%83%AA%E3%83%95%E3%82%B7%E3%83%83%E3%83%84%E7%89%A9%E7%90%86%E5%AD%A6%E5%B0%8F%E6%95%99%E7%A8%8B-%E3%81%A1%E3%81%8F%E3%81%BE%E5%AD%A6%E8%8A%B8%E6%96%87%E5%BA%AB-L-D-%E3%83%A9%E3%83%B3%E3%83%80%E3%82%A6/dp/4480091114", // 実際のAmazon等のリンク
+                    image: "landau-book.jpg",
+                    imageCaption: "書影：『物理学小教程 力学・場の理論』（ちくま学芸文庫）",
+                    linkUrl: "https://www.amazon.co.jp/%E5%8A%9B%E5%AD%A6%E3%83%BB%E5%A0%B4%E3%81%AE%E7%90%86%E8%AB%96%E2%80%95%E3%83%A9%E3%83%B3%E3%83%80%E3%82%A6-%E3%83%AA%E3%83%95%E3%82%B7%E3%83%83%E3%83%84%E7%89%A9%E7%90%86%E5%AD%A6%E5%B0%8F%E6%95%99%E7%A8%8B-%E3%81%A1%E3%81%8F%E3%81%BE%E5%AD%A6%E8%8A%B8%E6%96%87%E5%BA%AB-L-D-%E3%83%A9%E3%83%B3%E3%83%80%E3%82%A6/dp/4480091114",
                     linkText: "テキスト詳細を確認"
-                    // --- ここまで ---
                 },
                 {
                     category: "Research",
@@ -212,7 +217,6 @@
                     desc: "位相空間上の格子構造を利用した誤り訂正メカニズムの検証。2026年3月初旬の卒業論文提出に向けた最終調整。",
                     meta: "2026 / Thesis",
                     hasButton: false
-                    // ※GKPの項目には画像・リンクがないため、プロパティを記述しなければ自動的に非表示になります。
                 }
             ],
             lab: {
@@ -222,11 +226,6 @@
                         title: "ランダウ=リフシッツ「力学・場の理論」§60. 電荷の静電エネルギー",
                         content: "荷電粒子を点とみなすことによって生じる、電荷の自己エネルギーが無限大になる内部矛盾について議論した。"
                     }
-                    // {
-                    //     date: "2026-00-00",
-                    //     title: "",
-                    //     content: ""
-                    // }
                 ]
             },
             studio: [
@@ -272,23 +271,17 @@
                 },
             ],
             daily: [
-                // { 
-                //     date: "", 
-                //     title: "", 
-                //     content: "",
-                //     images: [] // 画像がない場合は空欄
-                // },
                 { 
                     date: "Thursday, February 19, 2026", 
                     title: "柏原市散策", 
                     content: "自主ゼミのメンバーの案内で柏原市（河津国分駅周辺）を巡った。",
-                    images: ["20260219_kashiwara_1.jpeg", "20260219_kashiwara_2.jpeg", "20260219_kashiwara_3.jpeg"] // 画像がない場合は空欄
+                    images: ["20260219_kashiwara_1.jpeg", "20260219_kashiwara_2.jpeg", "20260219_kashiwara_3.jpeg"]
                 },
                 { 
                     date: "Wednesdy, February 18, 2026", 
                     title: "名古屋へドライブ", 
                     content: "",
-                    images: ["20260218_drive_1.jpeg", "20260218_drive_2.jpeg", "20260218_drive_3.jpeg", "20260218_drive_4.jpeg"] // 画像がない場合は空欄
+                    images: ["20260218_drive_1.jpeg", "20260218_drive_2.jpeg", "20260218_drive_3.jpeg", "20260218_drive_4.jpeg"]
                 }
             ],
             bio: {
@@ -309,7 +302,7 @@
 
         const app = {
             currentTab: 'focus',
-            observationTimeout: null, // バーの自動非表示用タイマー
+            observationTimeout: null,
 
             init() {
                 const hash = window.location.hash.replace('#', '');
@@ -317,7 +310,6 @@
                 const overlay = document.getElementById('landing-overlay');
                 
                 if (hash) {
-                    // ハッシュがある場合は導入画面を非表示にして直接該当ページへ
                     overlay.style.display = 'none';
                     if (validTabs.includes(hash)) {
                         this.currentTab = hash;
@@ -327,7 +319,6 @@
                     this.switchTab(this.currentTab, false);
                     this.scrollToHash(hash);
                 } else {
-                    // ハッシュがない場合は導入画面を表示
                     overlay.style.display = 'flex';
                 }
 
@@ -338,47 +329,51 @@
                     } else if (currentHash.startsWith('group-') || currentHash.startsWith('img-')) {
                         this.switchTab('studio', false);
                     } else if (currentHash === '') {
-                        // ハッシュが空になったら導入画面へ戻る
                         this.showLandingPage();
                     }
                 });
             },
 
-            // 導入画面からサイトへ入る
+            toggleMobileMenu() {
+                const nav = document.getElementById('nav-container');
+                const btn = document.getElementById('mobile-menu-btn');
+                if (nav.classList.contains('hidden')) {
+                    nav.classList.remove('hidden');
+                    nav.classList.add('flex');
+                    btn.textContent = 'Close [-]';
+                } else {
+                    nav.classList.add('hidden');
+                    nav.classList.remove('flex');
+                    btn.textContent = 'Menu [+]';
+                }
+            },
+
             enterSite(tabId) {
                 const overlay = document.getElementById('landing-overlay');
                 overlay.classList.add('opacity-0');
                 setTimeout(() => {
                     overlay.style.display = 'none';
                     this.switchTab(tabId);
-                }, 1000); // 1秒かけてフェードアウト
+                }, 1000);
             },
 
-            // 導入画面を再表示する
             showLandingPage() {
                 const overlay = document.getElementById('landing-overlay');
                 overlay.style.display = 'flex';
-                // display:flex が適用された直後にopacityを戻すための微小な遅延
                 setTimeout(() => {
                     overlay.classList.remove('opacity-0');
                 }, 50);
-                
-                // URLからハッシュを消去
                 window.history.pushState(null, null, window.location.pathname);
             },
 
-            // ロゴクリック：現在の画面を維持したままバーを表示
             triggerObservation() {
                 const bar = document.getElementById('observation-bar');
                 const textElement = document.getElementById('observation-text');
                 const randomIndex = Math.floor(Math.random() * fragments.length);
                 
                 textElement.innerHTML = fragments[randomIndex];
-                
-                // バーを浮上させる (translate-y-full クラスを外す)
                 bar.classList.remove('translate-y-full');
 
-                // 8秒後に自動でバーを隠す。連続クリックされた場合はタイマーをリセット
                 if (this.observationTimeout) clearTimeout(this.observationTimeout);
                 this.observationTimeout = setTimeout(() => {
                     bar.classList.add('translate-y-full');
@@ -390,7 +385,7 @@
                     setTimeout(() => {
                         const target = document.getElementById(hash);
                         if (target) {
-                            target.scrollIntoView();
+                            target.scrollIntoView({ behavior: 'smooth' });
                         }
                     }, 100);
                 }
@@ -413,7 +408,23 @@
                     activeNav.classList.add('nav-active', 'text-ink');
                 }
 
-                document.querySelector('main').scrollTop = 0;
+                // モバイル解像度の場合、ナビゲーション選択後にメニューを閉じる
+                if (window.innerWidth < 768) {
+                    const nav = document.getElementById('nav-container');
+                    const btn = document.getElementById('mobile-menu-btn');
+                    if (nav && !nav.classList.contains('hidden')) {
+                        nav.classList.add('hidden');
+                        nav.classList.remove('flex');
+                        btn.textContent = 'Menu [+]';
+                    }
+                }
+
+                // コンテンツ領域のスクロール位置をリセット
+                const mainArea = document.getElementById('main-scroll-area');
+                if (mainArea) {
+                    mainArea.scrollTop = 0;
+                }
+                
                 this.render();
             },
 
@@ -448,7 +459,6 @@
                                 <h2 class="text-2xl md:text-3xl font-normal tracking-wide mb-10">${item.title}</h2>
                                 
                                 <div class="flex flex-col md:flex-row gap-8 md:gap-16 items-start">
-                                    
                                     <div class="flex-1 max-w-2xl">
                                         <p class="text-sm md:text-base leading-relaxed text-ink">${item.desc}</p>
                                         
@@ -476,8 +486,7 @@
                                     
                                     ${item.image ? `
                                     <div class="w-full md:w-56 shrink-0 mt-10 md:mt-0 relative group">
-                                        <img src="${item.image}" alt="Reference" class="w-full h-auto object-cover border border-inkFaint shadow-sm grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700 ease-out">
-                                        
+                                        <img src="${item.image}" alt="Reference" class="w-full h-auto object-cover border border-inkFaint shadow-sm grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700 ease-out" onerror="this.style.display='none'">
                                         ${item.imageCaption ? `
                                         <div class="font-mono text-[0.6rem] text-inkMuted mt-3 text-right leading-relaxed opacity-70">
                                             ${item.imageCaption}
@@ -485,7 +494,6 @@
                                         ` : ''}
                                     </div>
                                     ` : ''}
-                                    
                                 </div>
                             </article>
                         `).join('')}
@@ -496,26 +504,22 @@
             getStudioHtml() {
                 let html = '<div class="w-full pb-32">';
 
-                // 1. サブナビゲーション（インデックス）の生成
                 let subNav = '<div class="flex flex-wrap gap-6 font-mono text-xs text-inkMuted mb-16 border-b border-inkFaint pb-4 pt-10 sticky top-0 bg-beige/95 backdrop-blur-sm z-20 -mx-6 px-6 md:-mx-0 md:px-0">';
                 database.studio.forEach((group, index) => {
                     subNav += `<a href="#group-${index}" class="hover:text-ink transition-colors tracking-widest uppercase">${group.groupName}</a>`;
                 });
                 subNav += '</div>';
-                
                 html += subNav;
 
-                // 2. 各カテゴリと画像の生成
                 database.studio.forEach((group, index) => {
                     html += `
                         <div id="group-${index}" class="mb-32 scroll-mt-24">
                             <h3 class="font-serif text-xl md:text-2xl tracking-widest border-b border-inkFaint pb-4 mb-8 text-inkMuted">${group.groupName}</h3>
                     `;
 
-                    // サムネイルグリッド
                     const thumbHtml = group.items.map(item => `
                         <a href="#img-${item.id}" class="aspect-[4/3] w-full img-placeholder hover:opacity-70 transition-opacity overflow-hidden">
-                            ${item.image ? `<img src="${item.image}" class="w-full h-full object-cover" loading="lazy" alt="thumbnail">` : `<span class="text-[0.6rem] font-mono">No Img</span>`}
+                            ${item.image ? `<img src="${item.image}" class="w-full h-full object-cover" loading="lazy" alt="thumbnail" onerror="this.parentElement.innerHTML='<span class=\\'text-[0.6rem] font-mono\\'>No Img</span>'">` : `<span class="text-[0.6rem] font-mono">No Img</span>`}
                         </a>
                     `).join('');
 
@@ -525,11 +529,10 @@
                             </div>
                     `;
 
-                    // メイン画像
                     const fullImagesHtml = group.items.map(item => `
                         <div id="img-${item.id}" class="scroll-mt-32 mb-32 group/img">
-                            <div class="w-full h-[60vh] md:h-[80vh] img-placeholder mb-6 overflow-hidden">
-                                ${item.image ? `<img src="${item.image}" class="w-full h-full object-contain" loading="lazy" alt="${item.title}">` : `<span class="font-mono text-sm text-inkMuted">No Image</span>`}
+                            <div class="w-full h-[60vh] md:h-[80vh] img-placeholder mb-6 overflow-hidden bg-transparent">
+                                ${item.image ? `<img src="${item.image}" class="w-full h-full object-contain" loading="lazy" alt="${item.title}" onerror="this.parentElement.innerHTML='<span class=\\'font-mono text-sm text-inkMuted\\'>No Image</span>'">` : `<span class="font-mono text-sm text-inkMuted">No Image</span>`}
                             </div>
                             <div class="flex justify-between items-baseline border-b border-transparent group-hover/img:border-inkFaint pb-2 transition-colors">
                                 <h2 class="font-serif text-base tracking-widest">${item.title || 'Untitled'}</h2>
@@ -573,14 +576,11 @@
             
             getDailyHtml() {
                 const itemsHtml = database.daily.map(item => {
-                    // 複数画像のグリッド展開ロジック
                     let imagesHtml = '';
                     if (item.images && item.images.length > 0) {
-                        // 1枚なら1カラム、2枚以上なら2カラムのグリッドにする
                         const gridClass = item.images.length === 1 ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2';
-                        
                         const imgTags = item.images.map(img => `
-                            <img src="${img}" alt="daily log image" loading="lazy" class="w-full h-auto object-cover aspect-[4/3] border border-inkFaint/30">
+                            <img src="${img}" alt="daily log image" loading="lazy" class="w-full h-auto object-cover aspect-[4/3] border border-inkFaint/30" onerror="this.style.display='none'">
                         `).join('');
 
                         imagesHtml = `
@@ -595,9 +595,7 @@
                         <time class="font-mono text-[0.65rem] md:text-xs text-inkMuted w-40 shrink-0 pt-1 leading-relaxed">${item.date}</time>
                         <div class="flex-1 w-full">
                             <h3 class="font-serif text-base tracking-widest mb-4">${item.title}</h3>
-                            
                             ${item.content ? `<p class="text-sm leading-loose tracking-wide text-inkMuted whitespace-pre-wrap">${item.content}</p>` : ''}
-                            
                             ${imagesHtml}
                         </div>
                     </article>
@@ -690,40 +688,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
